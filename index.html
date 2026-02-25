@@ -1,9 +1,10 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8" />
+<meta charset="utf-8"/>
 <title>Impact Lab Registration</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Playpen+Sans+Thai&display=swap" rel="stylesheet">
 
@@ -19,7 +20,7 @@ font-family:"Playpen Sans Thai", system-ui;
 .card{
 max-width:900px;
 margin:auto;
-background:#fff;
+background:white;
 padding:28px;
 border-radius:18px;
 box-shadow:0 12px 28px rgba(0,0,0,.18);
@@ -28,110 +29,99 @@ box-shadow:0 12px 28px rgba(0,0,0,.18);
 h1{
 font-family:"Bagel Fat One";
 margin:0;
-font-size:34px;
+font-size:32px;
 }
 
 label{
 display:block;
 margin-top:20px;
 font-weight:700;
-font-size:16px;
 }
 
-input, select{
+input,select{
 width:100%;
-padding:14px 16px;
+padding:14px;
+margin-top:8px;
 border-radius:12px;
 border:1px solid #ccc;
-margin-top:8px;
-font-family:"Playpen Sans Thai", system-ui;
-font-size:15px;
+font-size:16px;
 box-sizing:border-box;
+font-family:"Playpen Sans Thai";
 }
 
 .qr-box{
-margin:24px auto 6px;
-max-width:320px;
-padding:18px;
-border-radius:18px;
-border:2px solid #000;
+margin:24px auto;
+max-width:300px;
+padding:16px;
+border-radius:16px;
+border:2px solid black;
 text-align:center;
-box-shadow:0 8px 20px rgba(0,0,0,.15);
 }
 
 .qr-box img{
 width:100%;
-border-radius:14px;
+border-radius:12px;
 }
 
 .btn{
 margin-top:30px;
 width:100%;
 padding:18px;
-background:#000;
-color:#fff;
+background:black;
+color:white;
 border:none;
 border-radius:18px;
 font-size:18px;
 font-weight:700;
 cursor:pointer;
-font-family:"Playpen Sans Thai", system-ui;
 }
 
 .status{
-margin-top:16px;
+margin-top:14px;
 font-size:14px;
-}
-
-.error{
 color:#b00020;
 }
 
 
-/* MOBILE PERFECT */
+/* MOBILE */
 
-@media (max-width:600px){
+@media(max-width:600px){
 
-body{
-padding:10px;
+h1{
+font-size:26px;
 }
 
 .card{
-padding:22px;
-border-radius:16px;
-}
-
-h1{
-font-size:28px;
+padding:20px;
 }
 
 input,select{
-font-size:16px;
 padding:16px;
 }
 
-.btn{
-font-size:18px;
-padding:18px;
-}
-
 .qr-box{
-max-width:260px;
+max-width:240px;
 }
 
 }
 
 </style>
+
 </head>
+
 
 <body>
 
 <div class="card">
 
-<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+
 <img src="./tfac.png" style="width:60px;height:60px;border-radius:50%">
+
 <h1>Impact Lab Registration</h1>
+
 </div>
+
 
 
 <form id="form">
@@ -139,8 +129,9 @@ max-width:260px;
 <label>Name</label>
 <input name="name" required>
 
+
 <label>Age</label>
-<input name="age" inputmode="numeric" required>
+<input name="age" required>
 
 
 <label>Participation Type</label>
@@ -148,18 +139,17 @@ max-width:260px;
 <select name="participation" id="participation" required>
 
 <option value="">Select</option>
-
 <option value="individual">Individual</option>
-
 <option value="team">Team</option>
 
 </select>
 
 
+
 <div id="teamSection" style="display:none;">
 
 <label>Number of Team Members</label>
-<input name="team_count" inputmode="numeric">
+<input name="team_count">
 
 
 <label>Have all team members registered?</label>
@@ -167,9 +157,7 @@ max-width:260px;
 <select name="registered">
 
 <option value="">Select</option>
-
 <option>Yes</option>
-
 <option>No</option>
 
 </select>
@@ -181,12 +169,14 @@ max-width:260px;
 </div>
 
 
+
 <label>Email</label>
 <input name="email" type="email" required>
 
 
 <label>Phone Number</label>
-<input name="phone" inputmode="numeric" required>
+<input name="phone" required>
+
 
 
 <label>Scan QR to Pay</label>
@@ -196,6 +186,7 @@ max-width:260px;
 <img src="./qr.png">
 
 </div>
+
 
 
 <button class="btn">
@@ -209,15 +200,17 @@ Submit Registration
 
 </form>
 
+
 </div>
 
 
 <script type="module">
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient }
+from "https://esm.sh/@supabase/supabase-js@2";
 
 
-const supabase = createClient(
+const supabase=createClient(
 
 "https://xlqiicdqljbvwqgafacp.supabase.co",
 
@@ -226,73 +219,83 @@ const supabase = createClient(
 );
 
 
-const form = document.getElementById("form");
+const form=document.getElementById("form");
 
-const participation = document.getElementById("participation");
+const participation=document.getElementById("participation");
 
-const teamSection = document.getElementById("teamSection");
+const teamSection=document.getElementById("teamSection");
 
-const statusEl = document.getElementById("status");
+const status=document.getElementById("status");
 
 
-participation.addEventListener("change", () => {
 
-if (participation.value === "team") {
+participation.addEventListener("change",()=>{
 
-teamSection.style.display = "block";
-
-} else {
-
-teamSection.style.display = "none";
-
-}
+teamSection.style.display=
+participation.value==="team"?"block":"none";
 
 });
 
 
-form.addEventListener("submit", async (e) => {
+
+form.addEventListener("submit",async(e)=>{
 
 e.preventDefault();
 
-
-const { error } = await supabase.from("submissions").insert({
-
-name: form.name.value.trim(),
-
-age: Number(form.age.value),
-
-participation_type: form.participation.value,
-
-team_count: form.team_count.value ? Number(form.team_count.value) : null,
-
-team_registered: form.registered.value || null,
-
-team_names: form.team_names.value || null,
-
-email: form.email.value.trim(),
-
-phone: form.phone.value.trim()
-
-});
+status.textContent="Submitting...";
 
 
-if (error) {
+try{
 
-statusEl.textContent = error.message;
+const {error}=await supabase
+.from("submissions")
+.insert([{
 
-statusEl.classList.add("error");
+name:form.name.value,
+
+age:Number(form.age.value),
+
+participation_type:form.participation.value,
+
+team_count:form.team_count.value||null,
+
+team_registered:form.registered.value||null,
+
+team_names:form.team_names.value||null,
+
+email:form.email.value,
+
+phone:form.phone.value
+
+}]);
+
+
+if(error){
+
+status.textContent=error.message;
 
 return;
 
 }
 
 
-window.location.href = "thankyou.html";
+window.location.href="./thankyou.html";
+
+
+}catch(err){
+
+status.textContent="Connection error";
+
+console.log(err);
+
+}
 
 });
 
 
 </script>
 
+
 </body>
+
 </html>
