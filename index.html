@@ -14,7 +14,7 @@ body{
 margin:0;
 padding:16px;
 background:#F5EEDF;
-font-family:"Playpen Sans Thai", system-ui;
+font-family:"Playpen Sans Thai";
 }
 
 .card{
@@ -29,12 +29,12 @@ box-shadow:0 12px 28px rgba(0,0,0,.18);
 h1{
 font-family:"Bagel Fat One";
 margin:0;
-font-size:32px;
+font-size:30px;
 }
 
 label{
 display:block;
-margin-top:20px;
+margin-top:18px;
 font-weight:700;
 }
 
@@ -46,25 +46,31 @@ border-radius:12px;
 border:1px solid #ccc;
 font-size:16px;
 box-sizing:border-box;
-font-family:"Playpen Sans Thai";
 }
 
 .qr-box{
 margin:24px auto;
-max-width:300px;
+max-width:260px;
 padding:16px;
-border-radius:16px;
 border:2px solid black;
+border-radius:16px;
 text-align:center;
 }
 
 .qr-box img{
 width:100%;
+}
+
+.preview{
+display:none;
+margin-top:12px;
+max-width:220px;
 border-radius:12px;
+border:1px solid #ccc;
 }
 
 .btn{
-margin-top:30px;
+margin-top:28px;
 width:100%;
 padding:18px;
 background:black;
@@ -72,231 +78,158 @@ color:white;
 border:none;
 border-radius:18px;
 font-size:18px;
-font-weight:700;
 cursor:pointer;
 }
 
 .status{
-margin-top:14px;
-font-size:14px;
-color:#b00020;
+margin-top:12px;
+font-size:15px;
+color:red;
 }
-
-
-/* MOBILE */
 
 @media(max-width:600px){
-
-h1{
-font-size:26px;
-}
-
-.card{
-padding:20px;
-}
-
-input,select{
-padding:16px;
-}
-
-.qr-box{
-max-width:240px;
-}
-
+h1{font-size:26px;}
+.card{padding:20px;}
+input,select{padding:16px;}
+.qr-box{max-width:220px;}
 }
 
 </style>
 
 </head>
 
-
 <body>
 
 <div class="card">
 
-<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-
-<img src="./tfac.png" style="width:60px;height:60px;border-radius:50%">
-
 <h1>Impact Lab Registration</h1>
-
-</div>
-
-
 
 <form id="form">
 
 <label>Name</label>
 <input name="name" required>
 
-
 <label>Age</label>
 <input name="age" required>
-
 
 <label>Participation Type</label>
 
 <select name="participation" id="participation" required>
-
 <option value="">Select</option>
 <option value="individual">Individual</option>
 <option value="team">Team</option>
-
 </select>
-
-
 
 <div id="teamSection" style="display:none;">
 
 <label>Number of Team Members</label>
 <input name="team_count">
 
-
 <label>Have all team members registered?</label>
 
 <select name="registered">
-
 <option value="">Select</option>
 <option>Yes</option>
 <option>No</option>
-
 </select>
 
-
-<label>Team Member Names (comma separated)</label>
+<label>Team Member Names</label>
 <input name="team_names">
 
 </div>
 
-
-
 <label>Email</label>
 <input name="email" type="email" required>
 
-
-<label>Phone Number</label>
+<label>Phone</label>
 <input name="phone" required>
 
-
-
-<label>Scan QR to Pay</label>
+<label>Scan QR</label>
 
 <div class="qr-box">
-
-<img src="./qr.png">
-
+<img src="qr.png">
 </div>
 
+<label>Attach Payment Screenshot</label>
+<input type="file" id="paymentImage" accept="image/*">
+<img id="preview" class="preview">
 
-
-<button class="btn">
-
+<button type="submit" class="btn">
 Submit Registration
-
 </button>
 
 <div id="status" class="status"></div>
 
-
 </form>
-
 
 </div>
 
-
 <script type="module">
 
-import { createClient }
+import { createClient } 
 from "https://esm.sh/@supabase/supabase-js@2";
 
-
-const supabase=createClient(
-
+const supabase = createClient(
 "https://jwxqlzccxajkwrkawuxj.supabase.co",
-
-"sb_publishable_SkOfvqVtreaiUIkOTTQxGA_FHZckoe5"
-
+"sb_publishable_U4BZXASjmXLOXS8Dts6fgg_UlAFfxZX"
 );
 
+const form = document.getElementById("form");
+const team = document.getElementById("teamSection");
+const part = document.getElementById("participation");
+const status = document.getElementById("status");
+const paymentInput = document.getElementById("paymentImage");
+const preview = document.getElementById("preview");
 
-const form=document.getElementById("form");
-
-const participation=document.getElementById("participation");
-
-const teamSection=document.getElementById("teamSection");
-
-const status=document.getElementById("status");
-
-
-
-participation.addEventListener("change",()=>{
-
-teamSection.style.display=
-participation.value==="team"?"block":"none";
-
+part.addEventListener("change",()=>{
+team.style.display =
+part.value === "team" ? "block" : "none";
 });
 
-
+paymentInput.addEventListener("change",()=>{
+const file = paymentInput.files[0];
+if(!file) return;
+const reader = new FileReader();
+reader.onload = ()=>{
+preview.src = reader.result;
+preview.style.display = "block";
+};
+reader.readAsDataURL(file);
+});
 
 form.addEventListener("submit",async(e)=>{
 
 e.preventDefault();
-
 status.textContent="Submitting...";
 
-
-try{
-
-const {error}=await supabase
+const { error } = await supabase
 .from("submissions")
 .insert([{
 
 name:form.name.value,
-
-age:Number(form.age.value),
-
+age:form.age.value,
 participation_type:form.participation.value,
-
-team_count:form.team_count.value||null,
-
-team_registered:form.registered.value||null,
-
-team_names:form.team_names.value||null,
-
+team_count:form.team_count.value,
+team_registered:form.registered.value,
+team_names:form.team_names.value,
 email:form.email.value,
-
 phone:form.phone.value
 
 }]);
 
-
 if(error){
-
-status.textContent=error.message;
-
+status.textContent="Error: "+error.message;
 return;
-
 }
 
-
+status.textContent="Success!";
+setTimeout(()=>{
 window.location.href="./thankyou.html";
-
-
-}catch(err){
-
-status.textContent="Connection error";
-
-console.log(err);
-
-}
+},1000);
 
 });
 
-
 </script>
 
-
 </body>
-
 </html>
-
